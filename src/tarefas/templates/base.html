@@ -16,6 +16,7 @@
 
     <script>
         // Aplicação MVC (Modelagem-Visualização-Controle)
+        // Seção de Modelagem
         let tarefas;
         const tarefasSalvas = JSON.parse(localStorage.getItem('tarefas'));
 
@@ -28,6 +29,7 @@
         function salvarTarefas(){
             localStorage.setItem('tarefas', JSON.stringify(tarefas)); 
         }
+        // Seção de Visualização
         function renderizarTarefas(){
             const listaTarefas = document.getElementById('listaTarefas');
             listaTarefas.innerHTML = "";

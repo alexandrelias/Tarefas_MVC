@@ -1,16 +1,25 @@
+from os import getenv
+from pathlib import Path
+
 import mysql.connector as mc
+from dotenv import load_dotenv
 from mysql.connector import Error
 
 
 class Database:
+    """
+    Classe que gerencia conexões e operações com um banco de dados MySQL.
+    """
     def __init__(self):
-        self.host = 'localhost'
-        self.username = 'root'
-        self.password = 'admin'
-        self.database = 'app_viagens'
+        load_dotenv()
+        self.host = getenv('DB_HOST')
+        self.username = getenv('DB_USER')
+        self.password = getenv('DB_PASSWORD')
+        self.database = getenv('DB_SCHEMA')
         self.connection = None
         self.cursor = None
-    def conectar(self):
+    def conectar(self) -> None:
+        """Estabelece uma conexão com o banco de dados MySQL."""
         try:
             self.connection = mc.connect(
                 host = self.host,
@@ -20,18 +29,74 @@ class Database:
         )
             if self.connection.is_connected():
                 self.cursor = self.connection.cursor(dictionary=True)
-                print("Conexão ao banco de dados realizada com ")
+                print("Conexão ao banco de dados realizada com sucesso!")
         except Error as e:
             print(f"Erro de Conexão {e}")
             self.connection = None
             self.cursor = None
-    def desconectar(self):
+    def desconectar(self) -> None:
+        """Encerra a conxão com o banco de dados e o cursor, se existirem."""
         if self.cursor:
             self.cursor.close()
         if self.connection:
             self.connection.close()
         print("Conexão encerrada com sucesso!")
+    def executar(self, sql, params = None):
+        """Executa uma instrução no banco de dados."""
+        if not self.connection or not self.cursor:
+            print("Conexão ao banco de dados não estabelecida!")
+            return 
+        try:
+            self.cursor.execute(sql, params)
+            if self.cursor.description:
+                return self.cursor.fetchall()
+            self.connection.commit()
+            return self.cursor.rowcount
+        except Error as e:
+            print(f"Erro de execução: {e}")
+            return
+
+    # Método de entrada no contexto (para uso com `with`)
+    def __enter__(self):
+        self.conectar()
+        return self
+    # Método de saída de contexo (para uso com `with`)
+    def __exit__(self, exc_type, ex_val, exc_tb):
+        self.desconectar()
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+SQL_PATH = BASE_DIR / "data" / "tarefas.sql"
+
+def init_db(sql_filepath=SQL_PATH):
+    """Função responsável por inicializar o schema (database) no banco de dados."""
+    load_dotenv()
+    try:
+        conexao = mc.connect(
+            host = getenv('DB_HOST'),
+            user = getenv('DB_USER'),
+            password = getenv('DB_PASSWORD')
+        )
+        cursor = conexao.cursor()
+
+        # Leitura do arquivo de criação do banco
+        with open(sql_filepath, 'r', encoding = 'utf-8') as arquivo:
+            sql = arquivo.read()
+
+        resultado = cursor.execute(sql, map_results = True)
+        if resultado:
+            for resultado in cursor.execute(sql, map_results = True):
+                if resultado.with_rows:
+                    resultado.fetchall()
+        conexao.commit()
+        cursor.close()
+        conexao.close()
+        print('Schema e tabelas inicializados com sucesso!')
+    except Error as e:
+        print(f'Erro no banco de dados: {e}')
+    except FileNotFoundError:
+        print('O arquivo especificado não pôde ser encontrado')
 # Área 51
-db = Database()
-db.conectar()
-db.desconectar()
+# db = Database()
+# db.conectar()
+# print(db.executar('select * from tipos_combustivel;'))
+# db.desconectar()
