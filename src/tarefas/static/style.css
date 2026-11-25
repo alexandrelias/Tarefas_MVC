@@ -10,12 +10,9 @@
     --borda: #d3b2ff;
     --sombra: 0 8px 24px rgba(230, 81, 0, 0.10);
 }
-
-
 * {
     box-sizing: border-box;
 }
-
 body {
     max-width: 760px;
     min-height: 100vh;
@@ -34,8 +31,6 @@ body {
 
     line-height: 1.2;
 }
-
-
 h2 {
     margin: 0 0 30px;
     color: var(--laranja-escuro);
@@ -44,7 +39,6 @@ h2 {
     line-height: 1.3;
     letter-spacing: -0.5px;
 }
-
 h2::after {
     content: "";
     display: block;
@@ -54,8 +48,6 @@ h2::after {
     border-radius: 10px;
     background: var(--laranja-principal);
 }
-
-
 input {
     display: block;
     width: 100%;
@@ -77,22 +69,17 @@ input {
         box-shadow 0.2s ease,
         background-color 0.2s ease;
 }
-
 input::placeholder {
     color: #a1887f;
 }
-
 input:hover {
     border-color: var(--laranja-claro);
 }
-
 input:focus {
     border-color: var(--laranja-principal);
     box-shadow: 0 0 0 4px rgba(245, 124, 0, 0.14);
 }
-
-
-body > button {
+body button {
     display: block;
     width: 100%;
     min-height: 52px;
@@ -121,33 +108,25 @@ body > button {
         box-shadow 0.2s ease,
         filter 0.2s ease;
 }
-
-body > button:hover {
+body button:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 18px rgba(230, 81, 0, 0.28);
     filter: brightness(1.04);
 }
-
-body > button:active {
+body button:active {
     transform: translateY(0);
     box-shadow: 0 3px 8px rgba(230, 81, 0, 0.18);
 }
-
 button:focus-visible {
     outline: 3px solid var(--laranja-claro);
     outline-offset: 3px;
 }
-
-
 #listaTarefas {
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin-top: 16px;
 }
-
-/* Cada tarefa é um div criado pelo JavaScript */
-
 #listaTarefas > li {
     display: flex;
     align-items: center;
@@ -177,8 +156,6 @@ button:focus-visible {
     border-left-color: var(--laranja-escuro);
     box-shadow: 0 10px 28px rgba(230, 81, 0, 0.15);
 }
-
-
 #listaTarefas a {
     flex-shrink: 0;
     margin-left: 0 !important;
@@ -200,14 +177,11 @@ button:focus-visible {
         background-color 0.2s ease,
         border-color 0.2s ease;
 }
-
 #listaTarefas a:hover {
     color: var(--branco);
     background: var(--laranja-escuro);
     border-color: var(--laranja-escuro);
 }
-
-
 @media (max-width: 600px) {
     body {
         padding: 32px 16px;
@@ -227,8 +201,6 @@ button:focus-visible {
         padding: 7px 10px;
     }
 }
-
-
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
